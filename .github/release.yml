@@ -1,0 +1,32 @@
+name: Create Release ZIP
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create ZIP Package
+        run: |
+          mkdir vpin-dmd-highscore
+          
+          cp *.ps1 vpin-dmd-highscore/
+          cp config.ini vpin-dmd-highscore/
+          cp README.md vpin-dmd-highscore/
+          cp LICENSE vpin-dmd-highscore/
+          cp -r image vpin-dmd-highscore/
+          
+          zip -r vpin-dmd-highscore.zip vpin-dmd-highscore/
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: vpin-dmd-highscore.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
